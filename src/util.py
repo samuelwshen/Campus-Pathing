@@ -1,5 +1,7 @@
 import math
+import networkx as nx
 from osmread import parse_file, Way, Relation, Node
+
 """
 Utility functions
 
@@ -12,14 +14,14 @@ def closest_element(point, elem_type, data):
     closest_dist = 10000000
     closest_elem = None
     for elem in data:
-        if isinstance(elem, elem_type):
+        if not isinstance(elem, Way) and isinstance(elem, elem_type):
             try:
                 temp_lonlat = (elem.lon, elem.lat)
                 if distance(point, temp_lonlat) < closest_dist:
                     closest_dist = distance(point, temp_lonlat)
                     closest_elem = elem
             except:
-                print("Attempting to access lat/lon of %s failed" % str(elem))
+                print("Excepting on", elem)
     return closest_elem
 
 #find distance between two lon/lat tuples
@@ -28,11 +30,67 @@ def distance(p1, p2):
     dy = abs(p1[1] - p2[1])
     return math.sqrt(dx**2 + dy**2)
 
+#initialize our networkx graph object using Edge as edges
+def init_graph(data):
+    nodes = {}   #dictionary, node ID -> myNode obj
+    ways = []       #list of ways, ways are tuples of node IDs that we know are connected
+    graph = nx.Graph()
 
+    for datum in data:
+        if isinstance(datum, Node):
+            nodes[datum.id] = myNode(datum)
+        elif isinstance(datum, Way):
+            ways.append(datum.nodes)
+
+    for way in ways:
+        if len(way) == 1:
+            print("Welp")
+        elif len(way) == 2:
+            prev = nodes[way[0]]
+            curr = nodes[way[1]]
+            graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
+        else:
+            #hardcode get the first two, then increment for the rest
+            prev = nodes[way[0]]
+            curr = nodes[way[1]]
+            for i in range(2, len(way)):
+                graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
+                prev = curr
+                curr = nodes[way[i]]
+            graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos())) #add the last one
+    return graph
+
+#wrapper class for node to allow for proper hashing by node ID
+class myNode:
+    def __init__(self, node):
+        assert isinstance(node, Node)   #make sure we have an osmread.Node obj
+        self.node = node
+        self.neighbors = set()     #hashset of myNode neighbors
+
+    #return id
+    def id(self):
+        try:
+            return self.node.id
+        except:
+            return None
+
+    #return (lon, lat) tuple
+    def pos(self):
+        try:
+            return (self.node.lon, self.node.lat)
+        except:
+            return (None, None)
+
+    def addNeighbor(self, neighbor):
+        self.neighbors.add(neighbor)
+
+    def __hash__(self):
+        return self.id().__hash__()   #hash of the ID which is just the Long but in int form
 
 """TESTING ZONE"""
+count = 0
 data = parse_file('../data/berkeley_map.osm')
-datum = next(data)
-test_tuple = (datum.lon + 0.000001, datum.lat + 0.000002)
-print(closest_element(test_tuple, object, data))
-print(test_tuple)
+graph = nx.Graph()      #so we can get pretty autocomplete when we test :)
+graph = init_graph(data)
+print(graph.number_of_nodes())
+print(graph.number_of_edges())
