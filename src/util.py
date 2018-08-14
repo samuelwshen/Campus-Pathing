@@ -9,19 +9,18 @@ Utility functions
 Sam Shen
 """
 
-#find closest element of type <elem_type> in OSM data
-def closest_element(point, elem_type, data):
+#find closest element of type <myNode> in OSM data
+def closest_element(point, data):
     closest_dist = 10000000
     closest_elem = None
     for elem in data:
-        if not isinstance(elem, Way) and isinstance(elem, elem_type):
-            try:
-                temp_lonlat = (elem.lon, elem.lat)
-                if distance(point, temp_lonlat) < closest_dist:
-                    closest_dist = distance(point, temp_lonlat)
-                    closest_elem = elem
-            except:
-                print("Excepting on", elem)
+        if not isinstance(elem, Way) and isinstance(elem, myNode):
+            #try:
+            if distance(point, elem.pos()) < closest_dist:
+                closest_dist = distance(point, elem.pos())
+                closest_elem = elem
+            #except:
+            #    print("Excepting on", elem)
     return closest_elem
 
 #find distance between two lon/lat tuples
@@ -58,14 +57,13 @@ def init_graph(data):
                 prev = curr
                 curr = nodes[way[i]]
             graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos())) #add the last one
-    return graph
+    return (graph, nodes)
 
 #wrapper class for node to allow for proper hashing by node ID
 class myNode:
     def __init__(self, node):
         assert isinstance(node, Node)   #make sure we have an osmread.Node obj
         self.node = node
-        self.neighbors = set()     #hashset of myNode neighbors
 
     #return id
     def id(self):
@@ -81,16 +79,16 @@ class myNode:
         except:
             return (None, None)
 
-    def addNeighbor(self, neighbor):
-        self.neighbors.add(neighbor)
-
     def __hash__(self):
         return self.id().__hash__()   #hash of the ID which is just the Long but in int form
+
+def getData(location):
+    return parse_file(location)
 
 """TESTING ZONE"""
 count = 0
 data = parse_file('../data/berkeley_map.osm')
 graph = nx.Graph()      #so we can get pretty autocomplete when we test :)
-graph = init_graph(data)
+graph = init_graph(data)[0]
 print(graph.number_of_nodes())
 print(graph.number_of_edges())
