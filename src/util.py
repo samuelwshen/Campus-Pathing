@@ -1,5 +1,7 @@
 import math
 import networkx as nx
+import json
+from decimal import *
 from osmread import parse_file, Way, Relation, Node
 
 """
@@ -9,7 +11,7 @@ Utility functions
 Sam Shen
 """
 
-#find closest element of type <myNode> in OSM data
+#find closest element of type <myNode> in OSM data, taking in point as a Decimal
 def closest_element(point, data):
     closest_dist = 10000000
     closest_elem = None
@@ -23,13 +25,25 @@ def closest_element(point, data):
             #    print("Excepting on", elem)
     return closest_elem
 
-#find distance between two lon/lat tuples
-def distance(p1, p2):
-    dx = abs(p1[0] - p2[0])
-    dy = abs(p1[1] - p2[1])
-    return math.sqrt(dx**2 + dy**2)
+#discreetize a whole bunch of elems in discreetables based on the nodes parameter
+#write to a write_loc as a bunch of coordinate paairs
+def batch_discretize(nodes, discreetables, write_loc):
+    file = open(write_loc, "w")
+    for building in discreetables:
+        print("Discretizing: ", building)
+        # add the lat/lon as a decimal tuple with the preceding "u'" removed
+        true_coord = (Decimal(str(building['latitude']).replace('u\'', '')), Decimal(str(building['longitude']).replace('u\'', '')))
+        closest_node = closest_element(true_coord, nodes.values())
+        file.write(str(closest_node.pos()) + "\n")
+    file.close()
 
-#initialize our networkx graph object using Edge as edges
+#find distance between two lon/lat tuples of Decimals
+def distance(p1, p2):
+    dx = abs(Decimal(p1[0] - p2[0]))
+    dy = abs(Decimal(p1[1] - p2[1]))
+    return Decimal(dx * dx + dy * dy).sqrt()
+
+#initialize our networkx graph object
 def init_graph(data):
     nodes = {}   #dictionary, node ID -> myNode obj
     ways = []       #list of ways, ways are tuples of node IDs that we know are connected
@@ -75,7 +89,7 @@ class myNode:
     #return (lon, lat) tuple
     def pos(self):
         try:
-            return (self.node.lon, self.node.lat)
+            return (Decimal(self.node.lon), Decimal(self.node.lat))
         except:
             return (None, None)
 
