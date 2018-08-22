@@ -67,10 +67,19 @@ def init_graph(data):
             graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos())) #add the last one
     return (graph, nodes)
 
+"""
+Takes a string of format 'Decimal, Decimal' and converts it into a tuple of decimals
+"""
+def stringToDecimal(str):
+    split = str.split(", ")
+    d1 = Decimal(split[0])
+    d2 = Decimal(split[1])
+    return (d1, d2)
+
 #wrapper class for node to allow for proper hashing by node ID
 class myNode:
     def __init__(self, node):
-        assert isinstance(node, Node)   #make sure we have an osmread.Node obj
+        assert isinstance(node, Node), "Cannot pass in a type %s" % type(node)   #make sure we have an osmread.Node obj
         self.node = node
 
     #return id
