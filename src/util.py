@@ -11,30 +11,24 @@ Utility functions
 Sam Shen
 """
 
-#find closest element of type <myNode> in OSM data, taking in point as a Decimal
+#find closest element of type <myNode> in data, taking in point as a Decimal
 def closest_element(point, data):
-    closest_dist = 10000000
-    closest_elem = None
-    for elem in data:
-        if not isinstance(elem, Way) and isinstance(elem, myNode):
-            #try:
-            if distance(point, elem.pos()) < closest_dist:
-                closest_dist = distance(point, elem.pos())
-                closest_elem = elem
-            #except:
-            #    print("Excepting on", elem)
-    return closest_elem
+    return min(data, key=lambda a : distance(a.pos(), point))
+
 
 #discreetize a whole bunch of elems in discreetables based on the nodes parameter
 #write to a write_loc as a bunch of coordinate paairs
 def batch_discretize(nodes, discreetables, write_loc):
     file = open(write_loc, "w")
+    count = 1
     for building in discreetables:
-        print("Discretizing: ", building)
+        print("{} / {}".format(count, len(discreetables)))
         # add the lat/lon as a decimal tuple with the preceding "u'" removed
-        true_coord = (Decimal(str(building['latitude']).replace('u\'', '')), Decimal(str(building['longitude']).replace('u\'', '')))
-        closest_node = closest_element(true_coord, nodes.values())
-        file.write(str(closest_node.pos()) + "\n")
+        true_coord = (Decimal(str(building['longitude']).replace('u\'', '')), Decimal(str(building['latitude']).replace('u\'', '')))
+        closest_node_pos = closest_element(true_coord, nodes.values()).pos()
+        to_write = closest_node_pos[0].to_eng_string() + ", " + closest_node_pos[1].to_eng_string()
+        file.write(to_write + "\n")
+        count += 1
     file.close()
 
 #find distance between two lon/lat tuples of Decimals
@@ -99,10 +93,3 @@ class myNode:
 def getData(location):
     return parse_file(location)
 
-"""TESTING ZONE"""
-count = 0
-data = parse_file('../data/berkeley_map.osm')
-graph = nx.Graph()      #so we can get pretty autocomplete when we test :)
-graph = init_graph(data)[0]
-print(graph.number_of_nodes())
-print(graph.number_of_edges())
