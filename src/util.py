@@ -19,6 +19,7 @@ def closest_element(point, data):
 #discreetize a whole bunch of elems in discreetables based on the nodes parameter
 #write to a write_loc as a bunch of coordinate paairs
 def batch_discretize(nodes, discreetables, write_loc):
+    print("batch discretize", len(nodes))
     file = open(write_loc, "w")
     count = 1
     for building in discreetables:
@@ -40,6 +41,7 @@ def distance(p1, p2):
 #initialize our networkx graph object
 def init_graph(data):
     nodes = {}   #dictionary, node ID -> myNode obj
+    nodes_to_return = {} #dict, node ID -> myNode obj, filtered for nodes that are in a way
     ways = []       #list of ways, ways are tuples of node IDs that we know are connected
     graph = nx.Graph()
 
@@ -55,17 +57,23 @@ def init_graph(data):
         elif len(way) == 2:
             prev = nodes[way[0]]
             curr = nodes[way[1]]
+            nodes_to_return[way[0]] = prev
+            nodes_to_return[way[1]] = curr
             graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
         else:
             #hardcode get the first two, then increment for the rest
             prev = nodes[way[0]]
             curr = nodes[way[1]]
+            nodes_to_return[way[0]] = prev
+            nodes_to_return[way[1]] = curr
             for i in range(2, len(way)):
                 graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
                 prev = curr
                 curr = nodes[way[i]]
+                nodes_to_return[way[i]] = curr
             graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos())) #add the last one
-    return (graph, nodes)
+    print("Init graph", len(nodes_to_return))
+    return (graph, nodes_to_return)
 
 """
 Takes a string of format 'Decimal, Decimal' and converts it into a tuple of decimals

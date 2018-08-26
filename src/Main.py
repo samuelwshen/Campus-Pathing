@@ -13,7 +13,7 @@ import networkx as nx
 from decimal import *
 from osmread import Node
 
-firstRun = False
+firstRun = True
 
 graph, nodes = util.init_graph(util.getData('../data/berkeley_map.osm'))
 buildings = json.load(open("../data/buildings.json"))
@@ -35,7 +35,7 @@ for str in str_coords:
 
 for node in nodes.values():
     if node.pos() in dec_coords:
-        discrete_nodes.append(node)
+        discrete_nodes.append(node)     #getting the node objs by comparing their coordinates
 
 assert(len(discrete_nodes) == len(dec_coords)), "Not all calculated discrete nodes were found in the graph"
 
@@ -49,8 +49,10 @@ for b1 in discrete_nodes:
             true_dist = heur(b1, b2)
             try:
                 dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2, heur)  #optimal path length
-                percent_diff = (dist - true_dist) / true_dist
+                percent_diff = (dist - true_dist) / true_dist * 100
                 print(percent_diff)
             except nx.exception.NetworkXNoPath as e:
                 print("Warning: two nodes have no path")
+            except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
+                print("Either b1 or b2 not in graph")
 
