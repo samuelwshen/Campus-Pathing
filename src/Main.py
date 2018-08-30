@@ -52,7 +52,7 @@ for b1 in discrete_nodes:
                 percent_diff = (dist - true_dist) / true_dist * 100
                 print(percent_diff)
             except nx.exception.NetworkXNoPath as e:
-                print("Warning: two nodes have no path")
+                print("Warning: two nodes have no path", b1.pos(), b2.pos())
             except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
                 print("Either b1 or b2 not in graph")
 
