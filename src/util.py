@@ -1,7 +1,7 @@
 import math
 import networkx as nx
 import json
-import time
+import time, random
 from decimal import *
 from osmread import parse_file, Way, Relation, Node
 
@@ -100,6 +100,19 @@ def filterCoord(ullon, ullat, lrlon, lrlat, coord):
     c_lon = coord[0]
     c_lat = coord[1]
     return not (c_lon < ullon or c_lon > lrlon or c_lat > ullat or c_lat < lrlat)
+
+
+"""
+randomly pick n elements from some collection, excluding list <exclude>
+"""
+def pick(n, collection, exclude):
+    picked = [] #our picked elements
+    while len(picked) < n:
+        pick = random.choice(collection)
+        if pick not in exclude:
+            picked.append(pick)
+            exclude.append(pick)
+    return picked
 
 
 #wrapper class for node to allow for proper hashing by node ID
