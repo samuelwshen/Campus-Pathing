@@ -1,190 +1,191 @@
 
-[{
-  "name": "Bancroft Library/University Archives",
-  "longitude": "-122.2587",
-  "latitude": "37.8723"
-},
-{
-  "name": "Engineering Library",
-  "longitude": "-122.25807",
-  "latitude": "37.87425"
-},
-{
-  "name": "Pacific Film Archive and Study Center",
-  "longitude": "-122.255667",
-  "latitude": "37.86871000000001"
-},
-{
-  "name": "Doe Memorial Library",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Morrison Library",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Starr East Asian Library",
-  "longitude": "-122.26034",
-  "latitude": "37.873570000000001"
-},
-{
-  "name": "Moffitt Library",
-  "longitude": "-122.26081000000001",
-  "latitude": "37.872549999999997"
-},
-{
-  "name": "Hargrove Music Library",
-  "longitude": "-122.2561",
-  "latitude": "37.870440000000002"
-},
-{
-  "name": "Howison Philosophy Library",
-  "longitude": "-122.25799000000001",
-  "latitude": "37.870989999999999"
-},
-{
-  "name": "Bioscience & Natural Resources Library",
-  "longitude": "-122.26211000000001",
-  "latitude": "37.871479999999998"
-},
-{
-  "name": "Environmental Design Library",
-  "longitude": "-122.25488",
-  "latitude": "37.8705"
-},
-{
-  "name": "Anthropology Library",
-  "longitude": "-122.2552",
-  "latitude": "37.869880000000002"
-},
-{
-  "name": "Berkeley Law Library",
-  "longitude": "-122.25341",
-  "latitude": "37.86992"
-},
-{
-  "name": "Chemistry and Chemical Engineering Library",
-  "longitude": "-122.255532",
-  "latitude": "37.872895"
-},
-{
-  "name": "Earth Sciences and Map Library",
-  "longitude": "-122.259660",
-  "latitude": "37.873996"
-},
-{
-  "name": "Business Library",
-  "longitude": "-122.25384",
-  "latitude": "37.871690000000001"
-},
-{
-  "name": "Education-Psychology Library",
-  "longitude": "-122.26392209529877",
-  "latitude": "37.87412506921522"
-},
-{
-  "name": "Ethnic Studies Library",
-  "longitude": "-122.25761",
-  "latitude": "37.87124"
-},
-{
-  "name": "Optometry and Health Sciences Library",
-  "longitude": "-122.254711",
-  "latitude": "37.871525"
-},
-{
-  "name": "Institue of Governmental Studies Library",
-  "longitude": "-122.25799000000001",
-  "latitude": "37.870989999999999"
-},
-{
-  "name": "Mathematics Statistics Library",
-  "longitude": "-122.25783",
-  "latitude": "37.873629999999999"
-},
-{
-  "name": "Northern Regional Library",
-  "longitude": "-122.334985",
-  "latitude": "37.917643"
-},
-{
-  "name": "Physics-Astronomy Library",
-  "longitude": "-122.25688",
-  "latitude": "37.872489999999999"
-},
-{
-  "name": "Public Health Library",
-  "longitude": "-122.26635",
-  "latitude": "37.87189"
-},
-{
-  "name": "Social Research Library",
-  "longitude": "-122.26105",
-  "latitude": "37.873739999999998"
-},
-{
-  "name": "South/Southeast Asia Library",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Institute for Research on Labor and Employment Library",
-  "longitude": "-122.257882",
-  "latitude": "37.867318"
-},
-{
-  "name": "Art History/Classics Library",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Graduate Services",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Newspapers & Microform Library",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999997"
-},
-{
-  "name": "Graduate Theological Union Library",
-  "longitude": "-122.261843",
-  "latitude": "37.875544"
-},
-{
-  "name": "Institute of Transportation Studies Library",
-  "longitude": "-122.259051",
-  "latitude": "37.873829"
-},
-{
-  "name": "Media Resources Center",
-  "longitude": "-122.26081000000001",
-  "latitude": "37.872549999999997"
-},
-{
-  "name": "Pacific Earthquake Engineering Research (PEER) Library",
-  "longitude": "-122.332485",
-  "latitude": "37.918328"
-},
-{
-  "name": "Career Counseling Library",
-  "longitude": "-122.26455",
-  "latitude": "37.867879"
-},
-{
-  "name": "Visual Resources Center",
-  "longitude": "-122.25488",
-  "latitude": "37.8705"
-},
-{
-  "name": "Data Lab",
-  "longitude": "-122.25955999999999",
-  "latitude": "37.872439999999998"
-},
-{
+[
+  {
+    "name": "Bancroft Library/University Archives",
+    "longitude": "-122.2587",
+    "latitude": "37.8723"
+  },
+  {
+    "name": "Engineering Library",
+    "longitude": "-122.25807",
+    "latitude": "37.87425"
+  },
+  {
+    "name": "Pacific Film Archive and Study Center",
+    "longitude": "-122.255667",
+    "latitude": "37.86871000000001"
+  },
+  {
+    "name": "Doe Memorial Library",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Morrison Library",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Starr East Asian Library",
+    "longitude": "-122.26034",
+    "latitude": "37.873570000000001"
+  },
+  {
+    "name": "Moffitt Library",
+    "longitude": "-122.26081000000001",
+    "latitude": "37.872549999999997"
+  },
+  {
+    "name": "Hargrove Music Library",
+    "longitude": "-122.2561",
+    "latitude": "37.870440000000002"
+  },
+  {
+    "name": "Howison Philosophy Library",
+    "longitude": "-122.25799000000001",
+    "latitude": "37.870989999999999"
+  },
+  {
+    "name": "Bioscience & Natural Resources Library",
+    "longitude": "-122.26211000000001",
+    "latitude": "37.871479999999998"
+  },
+  {
+    "name": "Environmental Design Library",
+    "longitude": "-122.25488",
+    "latitude": "37.8705"
+  },
+  {
+    "name": "Anthropology Library",
+    "longitude": "-122.2552",
+    "latitude": "37.869880000000002"
+  },
+  {
+    "name": "Berkeley Law Library",
+    "longitude": "-122.25341",
+    "latitude": "37.86992"
+  },
+  {
+    "name": "Chemistry and Chemical Engineering Library",
+    "longitude": "-122.255532",
+    "latitude": "37.872895"
+  },
+  {
+    "name": "Earth Sciences and Map Library",
+    "longitude": "-122.259660",
+    "latitude": "37.873996"
+  },
+  {
+    "name": "Business Library",
+    "longitude": "-122.25384",
+    "latitude": "37.871690000000001"
+  },
+  {
+    "name": "Education-Psychology Library",
+    "longitude": "-122.26392209529877",
+    "latitude": "37.87412506921522"
+  },
+  {
+    "name": "Ethnic Studies Library",
+    "longitude": "-122.25761",
+    "latitude": "37.87124"
+  },
+  {
+    "name": "Optometry and Health Sciences Library",
+    "longitude": "-122.254711",
+    "latitude": "37.871525"
+  },
+  {
+    "name": "Institue of Governmental Studies Library",
+    "longitude": "-122.25799000000001",
+    "latitude": "37.870989999999999"
+  },
+  {
+    "name": "Mathematics Statistics Library",
+    "longitude": "-122.25783",
+    "latitude": "37.873629999999999"
+  },
+  {
+    "name": "Northern Regional Library",
+    "longitude": "-122.334985",
+    "latitude": "37.917643"
+  },
+  {
+    "name": "Physics-Astronomy Library",
+    "longitude": "-122.25688",
+    "latitude": "37.872489999999999"
+  },
+  {
+    "name": "Public Health Library",
+    "longitude": "-122.26635",
+    "latitude": "37.87189"
+  },
+  {
+    "name": "Social Research Library",
+    "longitude": "-122.26105",
+    "latitude": "37.873739999999998"
+  },
+  {
+    "name": "South/Southeast Asia Library",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Institute for Research on Labor and Employment Library",
+    "longitude": "-122.257882",
+    "latitude": "37.867318"
+  },
+  {
+    "name": "Art History/Classics Library",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Graduate Services",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Newspapers & Microform Library",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999997"
+  },
+  {
+    "name": "Graduate Theological Union Library",
+    "longitude": "-122.261843",
+    "latitude": "37.875544"
+  },
+  {
+    "name": "Institute of Transportation Studies Library",
+    "longitude": "-122.259051",
+    "latitude": "37.873829"
+  },
+  {
+    "name": "Media Resources Center",
+    "longitude": "-122.26081000000001",
+    "latitude": "37.872549999999997"
+  },
+  {
+    "name": "Pacific Earthquake Engineering Research (PEER) Library",
+    "longitude": "-122.332485",
+    "latitude": "37.918328"
+  },
+  {
+    "name": "Career Counseling Library",
+    "longitude": "-122.26455",
+    "latitude": "37.867879"
+  },
+  {
+    "name": "Visual Resources Center",
+    "longitude": "-122.25488",
+    "latitude": "37.8705"
+  },
+  {
+    "name": "Data Lab",
+    "longitude": "-122.25955999999999",
+    "latitude": "37.872439999999998"
+  },
+  {
     "name": "Bowles Hall",
     "longitude": "-122.253168",
     "latitude": "37.873357"
@@ -963,4 +964,6 @@
     "name": "Jacobs Hall",
     "longitude": "-122.258809",
     "latitude": "37.876039"
-  }]
+  }
+]
+

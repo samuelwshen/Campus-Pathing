@@ -39,7 +39,7 @@ def batch_discretize(nodes, discreetables, write_loc):
         print("{} / {}".format(count, total))
     file.close()
     end = time.time()
-    print("Total elapsed time to discretize nodes: %d" %start - end)
+    print("Total elapsed time to discretize nodes: %f seconds" % (end - start))
 
 #find distance between two lon/lat tuples of Decimals
 def distance(p1, p2):
@@ -60,29 +60,28 @@ def init_graph(data):
         elif isinstance(datum, Way):
             ways.append(datum.nodes)
 
+    nodes_to_add = []       #list of nodes to add IN ORDER
+    nodes_to_add_offset = []    #list of nodes to add with the first popped to make zipping work
+    dists = []
     for way in ways:
-        if len(way) == 1:
-            print("Welp")
-        elif len(way) == 2:
-            prev = nodes[way[0]]
-            curr = nodes[way[1]]
-            nodes_to_return[way[0]] = prev
-            nodes_to_return[way[1]] = curr
-            graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
-        else:
-            #hardcode get the first two, then increment for the rest
-            prev = nodes[way[0]]
-            curr = nodes[way[1]]
-            nodes_to_return[way[0]] = prev
-            nodes_to_return[way[1]] = curr
-            for i in range(2, len(way)):
-                graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos()))
-                prev = curr
-                curr = nodes[way[i]]
-                nodes_to_return[way[i]] = curr
-            graph.add_edge(prev, curr, weight=distance(prev.pos(), curr.pos())) #add the last one
-    print("Init graph", len(nodes_to_return))
+        for node_id in way:
+            nodes_to_add.append(nodes[node_id])
+            nodes_to_add_offset.append(nodes[node_id])
+            nodes_to_return[node_id] = nodes[node_id]
+
+    nodes_to_add_offset.pop(0)  #create the offset
+    for i in range(len(nodes_to_add_offset)):
+        dists.append(distance(nodes_to_add[i].pos(), nodes_to_add_offset[i].pos()))
+
+    #given list of nodes formatted as [1, 2, 3, 4] and [2, 3, 4] create tuples
+    #[(1, 2, dist), (2, 3, dist), (3, 4, dist)]
+    tup_set = zip(iter(nodes_to_add), iter(nodes_to_add_offset), iter(dists))
+    graph.add_weighted_edges_from(tup_set)
+
+    print("NOdes: %d" %graph.number_of_nodes())
     return (graph, nodes_to_return)
+
+
 
 """
 Takes a string of format 'Decimal, Decimal' and converts it into a tuple of decimals

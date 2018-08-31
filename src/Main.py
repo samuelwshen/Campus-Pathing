@@ -13,10 +13,12 @@ import networkx as nx
 from decimal import *
 from osmread import Node
 
-firstRun = True
+firstRun = False
 
 graph, nodes = util.init_graph(util.getData('../data/berkeley_map.osm'))
 buildings = json.load(open("../data/buildings.json"))
+
+print(nx.number_connected_components(graph))
 
 #only have to run this part once
 if firstRun:
@@ -49,8 +51,8 @@ for b1 in discrete_nodes:
             true_dist = heur(b1, b2)
             try:
                 dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2, heur)  #optimal path length
-                percent_diff = (dist - true_dist) / true_dist * 100
-                print(percent_diff)
+                percent_of_true_dist = dist / true_dist * 100
+                print("%f%% of straight line distance" %percent_of_true_dist)
             except nx.exception.NetworkXNoPath as e:
                 print("Warning: two nodes have no path", b1.pos(), b2.pos())
             except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
