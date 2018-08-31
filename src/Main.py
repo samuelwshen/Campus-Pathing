@@ -14,7 +14,8 @@ from decimal import *
 from osmread import Node
 
 FIRST_RUN = False
-SAMPLE_SIZE_SQRT = 10   #the squareroot of the sample size
+SAMPLE_REPEAT_SIZE = 3 #the number of times to sample
+SAMPLE_SIZE_SQRT = 8   #the squareroot of the sample size
 
 graph, nodes = util.init_graph(util.getData('../data/berkeley_map.osm'))
 buildings = json.load(open("../data/buildings.json"))
@@ -47,24 +48,26 @@ assert(len(discrete_nodes) == len(dec_coords)), "Not all calculated discrete nod
 dists = {} #dict from (start, end) building tuples to (straight line path length, optimal path length) tuple
 count = 0
 avg = Decimal()
-l1 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, [])      #pick any SAMPLE_SIZE_SQRT unique nodes
-l2 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, l1)      #pick SAMPLE_SIZE_SQRT excluding those in l1
-for b1 in l1:
-    for b2 in l2:
-        if b1 is not b2:
-            heur = lambda o1, o2 : util.distance(o1.pos(), o2.pos())
-            true_dist = heur(b1, b2)
-            try:
-                dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2, heur)  #optimal path length
-                percent_of_true_dist = dist / true_dist * 100
-                avg += percent_of_true_dist
-                count += 1
-                print("%f%% of straight line distance" %percent_of_true_dist)
-            except nx.exception.NetworkXNoPath as e:
-                print("Warning: two nodes have no path", b1.pos(), b2.pos())
-            except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
-                print("Either b1 or b2 not in graph")
-
-avg = avg / count
-print("Average percent of straight line distance: %f" %avg)
+avgs = []
+for i in range(SAMPLE_REPEAT_SIZE):
+    l1 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, [])      #pick any SAMPLE_SIZE_SQRT unique nodes
+    l2 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, l1)      #pick SAMPLE_SIZE_SQRT excluding those in l1
+    for b1 in l1:
+        for b2 in l2:
+            if b1 is not b2:
+                heur = lambda o1, o2 : util.distance(o1.pos(), o2.pos())
+                true_dist = heur(b1, b2)
+                try:
+                    dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2, heur)  #optimal path length
+                    percent_of_true_dist = dist / true_dist * 100
+                    avg += percent_of_true_dist
+                    count += 1
+                    print("%f%% of straight line distance" %percent_of_true_dist)
+                except nx.exception.NetworkXNoPath as e:
+                    print("Warning: two nodes have no path", b1.pos(), b2.pos())
+                except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
+                    print("Either b1 or b2 not in graph")
+    avg = avg / count
+    avgs.append(avg)
+print("Average percent of straight line distance: %f" %(sum(avgs)/len(avgs)))
 
