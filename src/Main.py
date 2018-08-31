@@ -19,8 +19,6 @@ SAMPLE_SIZE_SQRT = 10   #the squareroot of the sample size
 graph, nodes = util.init_graph(util.getData('../data/berkeley_map.osm'))
 buildings = json.load(open("../data/buildings.json"))
 
-print(nx.number_connected_components(graph))
-
 #only have to run this part once
 if FIRST_RUN:
     util.batch_discretize(nodes, buildings, '../data/discrete_locs.txt')

@@ -21,7 +21,6 @@ def closest_element(point, data):
 #write to a write_loc as a bunch of coordinate paairs
 def batch_discretize(nodes, discreetables, write_loc):
     start = time.time()
-    print("batch discretize", len(nodes))
     file = open(write_loc, "w")
     count = 0
     total = len(discreetables)
@@ -78,7 +77,6 @@ def init_graph(data):
     tup_set = zip(iter(nodes_to_add), iter(nodes_to_add_offset), iter(dists))
     graph.add_weighted_edges_from(tup_set)
 
-    print("NOdes: %d" %graph.number_of_nodes())
     return (graph, nodes_to_return)
 
 
