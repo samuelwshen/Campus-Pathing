@@ -18,6 +18,7 @@ SAMPLE_REPEAT_SIZE = 3 #the number of times to sample
 SAMPLE_SIZE_SQRT = 8   #the squareroot of the sample size
 
 graph, nodes = util.init_graph(util.getData('../data/berkeley_map.osm'))
+print("Initialized graph...")
 buildings = json.load(open("../data/buildings.json"))
 
 #only have to run this part once
@@ -27,7 +28,7 @@ if FIRST_RUN:
 
 str_coords = []         #list of string coordinate pairs
 dec_coords = set()      #set of decimal coordinate pairs
-discrete_nodes = []
+discrete_nodes = []     #the nodes that represent discrete buildings
 try:
     file = open("../data/discrete_locs.txt")
 except:
@@ -41,7 +42,7 @@ for str in str_coords:
 
 for node in nodes.values():
     if node.pos() in dec_coords:
-        discrete_nodes.append(node)     #getting the node objs by comparing their coordinates
+        discrete_nodes.append(node)     #getting the node objs by comparing their coordinates to the discrete building coordinates
 
 assert(len(discrete_nodes) == len(dec_coords)), "Not all calculated discrete nodes were found in the graph"
 

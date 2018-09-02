@@ -1,7 +1,7 @@
 import math
 import networkx as nx
 import json
-import time, random
+import time, random, QuadTree
 from decimal import *
 from osmread import parse_file, Way, Relation, Node
 
@@ -16,32 +16,33 @@ Sam Shen
 def closest_element(point, data):
     return min(data, key=lambda a : distance(a.pos(), point))
 
+def closest_element_quad(point, quadtree):
+    return quadtree.getNodeByCoord(point)
+
 
 #discreetize a whole bunch of elems in discreetables based on the nodes parameter
 #write to a write_loc as a bunch of coordinate paairs
 def batch_discretize(nodes, discreetables, write_loc):
     start = time.time()
     file = open(write_loc, "w")
-    count = 0
-    total = len(discreetables)
+    qt = QuadTree.QuadTree(-122.2675, 37.8768, -122.2493, 37.8656, nodes.values())
+    print("Total time to initialize QuadTree: %f seconds" %(time.time() - start))
+    start = time.time()
     for building in discreetables:
         # add the lat/lon as a decimal tuple with the preceding "u'" removed
         true_coord = (Decimal(str(building['longitude']).replace('u\'', '')), Decimal(str(building['latitude']).replace('u\'', '')))
-        if not filterCoord(-122.2675, 37.8768, -122.2493, 37.8656, true_coord):
-            print(building, " out of range")
-            total -= 1
-        else:
-            closest_node_pos = closest_element(true_coord, nodes.values()).pos()
+        if filterCoord(-122.2675, 37.8768, -122.2493, 37.8656, true_coord):
+            closest_node_pos = closest_element_quad(true_coord, qt).pos()
             to_write = closest_node_pos[0].to_eng_string() + ", " + closest_node_pos[1].to_eng_string()
             file.write(to_write + "\n")
-            count += 1
-        print("{} / {}".format(count, total))
     file.close()
     end = time.time()
-    print("Total elapsed time to discretize nodes: %f seconds" % (end - start))
+    print("Total elapsed time to discretize buildings: %f seconds" % (end - start))
 
 #find distance between two lon/lat tuples of Decimals
 def distance(p1, p2):
+    if p1 is None or p2 is None:
+        return 100000000
     dx = abs(Decimal(p1[0] - p2[0]))
     dy = abs(Decimal(p1[1] - p2[1]))
     return Decimal(dx * dx + dy * dy).sqrt()
