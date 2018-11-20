@@ -2,8 +2,8 @@
 A main class to create a graph from OSM data, discretize building locations, and calculate A* distances
 using networkx.astar_path()
 
-Calculates walking distances between all pairs of buildings and compares to optimal
-straight-line path and horribly unoptimal manhattan distance
+Calculates walking distances between a random sampling of buildings and compares to optimal
+straight-line path
 
 Sam Shen
 """
@@ -44,31 +44,9 @@ for node in nodes.values():
     if node.pos() in dec_coords:
         discrete_nodes.append(node)     #getting the node objs by comparing their coordinates to the discrete building coordinates
 
-assert(len(discrete_nodes) == len(dec_coords)), "Not all calculated discrete nodes were found in the graph"
+assert(len(discrete_nodes) == len(dec_coords)), "Not all calculated discrete nodes were found in the graph %d vs %d" %(len(discrete_nodes), len(dec_coords))
 
-dists = {} #dict from (start, end) building tuples to (straight line path length, optimal path length) tuple
-count = 0
-avg = Decimal()
-avgs = []
-for i in range(SAMPLE_REPEAT_SIZE):
-    l1 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, [])      #pick any SAMPLE_SIZE_SQRT unique nodes
-    l2 = util.pick(SAMPLE_SIZE_SQRT, discrete_nodes, l1)      #pick SAMPLE_SIZE_SQRT excluding those in l1
-    for b1 in l1:
-        for b2 in l2:
-            if b1 is not b2:
-                heur = lambda o1, o2 : util.distance(o1.pos(), o2.pos())
-                true_dist = heur(b1, b2)
-                try:
-                    dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2, heur)  #optimal path length
-                    percent_of_true_dist = dist / true_dist * 100
-                    avg += percent_of_true_dist
-                    count += 1
-                    print("%f%% of straight line distance" %percent_of_true_dist)
-                except nx.exception.NetworkXNoPath as e:
-                    print("Warning: two nodes have no path", b1.pos(), b2.pos())
-                except nx.exception.NodeNotFound as e:  #when a node isn't part of a Way
-                    print("Either b1 or b2 not in graph")
-    avg = avg / count
-    avgs.append(avg)
-print("Average percent of straight line distance: %f" %(sum(avgs)/len(avgs)))
+util.find_distances_naive(graph, discrete_nodes, SAMPLE_REPEAT_SIZE, SAMPLE_SIZE_SQRT)
+#util.find_distances_floyd_warshall(graph, discrete_nodes)
+
 

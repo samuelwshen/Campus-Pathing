@@ -25,14 +25,15 @@ def closest_element_quad(point, quadtree):
 def batch_discretize(nodes, discreetables, write_loc):
     start = time.time()
     file = open(write_loc, "w")
-    qt = QuadTree.QuadTree(-122.2675, 37.8768, -122.2493, 37.8656, nodes.values())
-    print("Total time to initialize QuadTree: %f seconds" %(time.time() - start))
+    #qt = QuadTree.QuadTree(-122.2675, 37.8768, -122.2493, 37.8656, nodes.values())
+    #print("Total time to initialize QuadTree: %f seconds" %(time.time() - start))
     start = time.time()
     for building in discreetables:
         # add the lat/lon as a decimal tuple with the preceding "u'" removed
         true_coord = (Decimal(str(building['longitude']).replace('u\'', '')), Decimal(str(building['latitude']).replace('u\'', '')))
         if filterCoord(-122.2675, 37.8768, -122.2493, 37.8656, true_coord):
-            closest_node_pos = closest_element_quad(true_coord, qt).pos()
+            #closest_node_pos = closest_element_quad(true_coord, qt).pos()
+            closest_node_pos = closest_element_quad(true_coord, nodes).pos()
             to_write = closest_node_pos[0].to_eng_string() + ", " + closest_node_pos[1].to_eng_string()
             file.write(to_write + "\n")
     file.close()
@@ -49,10 +50,11 @@ def distance(p1, p2):
 
 #initialize our networkx graph object
 def init_graph(data):
+    graph = nx.Graph()
     nodes = {}   #dictionary, node ID -> myNode obj
     nodes_to_return = {} #dict, node ID -> myNode obj, filtered for nodes that are in a way
     ways = []       #list of ways, ways are tuples of node IDs that we know are connected
-    graph = nx.Graph()
+
 
     for datum in data:
         if isinstance(datum, Node):
@@ -140,3 +142,35 @@ class myNode:
 def getData(location):
     return parse_file(location)
 
+"""
+    Finds distances naively between two random SAMPLE_SIZE_SQRT sized subsets of discrete_nodes
+    a SAMPLE_REPEAT_SIZE number of times and averages to find the avg ratio between
+    actual and optimal distance
+"""
+def find_distances_naive(graph, discrete_nodes, SAMPLE_REPEAT_SIZE, SAMPLE_SIZE_SQRT):
+    dists = {}  # dict from (start, end) building tuples to (straight line path length, optimal path length) tuple
+    count = 0
+    avg = Decimal()
+    avgs = []
+    for i in range(SAMPLE_REPEAT_SIZE):
+        l1 = pick(SAMPLE_SIZE_SQRT, discrete_nodes, [])  # pick any SAMPLE_SIZE_SQRT unique nodes
+        l2 = pick(SAMPLE_SIZE_SQRT, discrete_nodes, l1)  # pick SAMPLE_SIZE_SQRT excluding those in l1
+        for b1 in l1:
+            for b2 in l2:
+                if b1 is not b2:
+                    heur = lambda o1, o2: distance(o1.pos(), o2.pos())
+                    true_dist = heur(b1, b2)
+                    try:
+                        dist = nx.algorithms.shortest_paths.astar_path_length(graph, b1, b2,
+                                                                              heur)  # optimal path length
+                        percent_of_true_dist = dist / true_dist * 100
+                        avg += percent_of_true_dist
+                        count += 1
+                        print("%f%% of straight line distance" % percent_of_true_dist)
+                    except nx.exception.NetworkXNoPath as e:
+                        print("Warning: two nodes have no path", b1.pos(), b2.pos())
+                    except nx.exception.NodeNotFound as e:  # when a node isn't part of a Way
+                        print("Either b1 or b2 not in graph")
+        avg = avg / count
+        avgs.append(avg)
+    print("Average percent of straight line distance: %f" % (sum(avgs) / len(avgs)))
